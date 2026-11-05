@@ -16,3 +16,20 @@ human reviewed.
 - Did not load 2025 data. Did not implement the TypeSafe SDK call (package unconfirmed).
 - Defaults chosen are logged as PROPOSED in `docs/decisions.md`.
 - **Human review needed:** decisions D1–D10, and the JEV template wording.
+
+
+## 2026-11-05: OpenAI Codex, run by Charlie Martin
+- Adapted the earlier demo's direct HTTP JEV integration; removed the unimplemented
+  API client placeholder and package-selection blocker.
+- Added strict response/cache validation, explicit live opt-in and request caps,
+  cache-only replay, a per-clone execution lock, and separate pilot/variant outputs.
+- Added a 2024 CSV pilot and evidence-backed prompt-freeze command. Live pilot and
+  final freeze are deliberately deferred at Charlie's request; no API requests made.
+- Added a read-only project walkthrough notebook, README and offline verification.
+- Tightened main evaluation model selection, play-ID/probability checks and common-set
+  paired comparisons. Specialist training code and saved findings were not changed.
+- Human review needed: candidate prompt, pilot usage and sensitivity checks once run,
+  final freeze and any upcoming 2026 prospective-test protocol.
+- Verification: 20 offline tests passed; all 8 notebook code cells executed with HTTP
+  and API-key access blocked, with two saved figures and no errors. Previewed a
+  deterministic 20-play main pilot and five-play/three-variant sensitivity plan.

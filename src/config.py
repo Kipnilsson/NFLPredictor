@@ -48,6 +48,6 @@ def final_eval_enabled() -> bool:
 
 
 # JEV settings. The model ID must be a pinned, versioned ID (never an alias).
-JEV_MODEL_ID: str | None = os.environ.get("JEV_MODEL_ID")  # e.g. set in .env; see CLAUDE.md
-JEV_API_KEY_ENV = "JEV_API_KEY"
+JEV_MODEL_ID: str | None = os.environ.get("JEV_MODEL_ID", "jev-1.13.0")
+JEV_API_KEY_ENV = "TYPESAFE_API_KEY"
 JEV_DEV_SUBSET_GAMES = 60  # complete 2024 games used for prompt checks

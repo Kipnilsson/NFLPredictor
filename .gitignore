@@ -1,12 +1,13 @@
 # Data (regenerate with `python -m src.prep`)
 data/
 
-# JEV response cache: gitignored, but BACK IT UP (see CLAUDE.md)
+# JEV response cache: gitignored, but BACK IT UP (see README.md)
 cache/
 
 # Regenerable model binaries and per-play predictions
 results/models/
 results/predictions/
+results/jev/variants/*.parquet
 
 # Secrets
 .env

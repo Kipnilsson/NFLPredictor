@@ -13,12 +13,13 @@ MODEL_DIR = config.RESULTS_DIR / "models"
 SELECTION_DIR = config.RESULTS_DIR / "model_selection"
 
 
-def save_predictions(df: pl.DataFrame, p: np.ndarray, name: str, split: str) -> None:
+def save_predictions(df: pl.DataFrame, p: np.ndarray, name: str, split: str, *, output_dir=None) -> None:
     """Write per-play P(dropback) next to the identifying columns and the label."""
-    config.PRED_DIR.mkdir(parents=True, exist_ok=True)
+    output_dir = config.PRED_DIR if output_dir is None else output_dir
+    output_dir.mkdir(parents=True, exist_ok=True)
     out = df.select(["game_id", "play_id", "season", config.LABEL]).with_columns(
         pl.Series("p_dropback", np.asarray(p, dtype=float)))
-    out.write_parquet(config.PRED_DIR / f"{name}_{split}.parquet")
+    out.write_parquet(output_dir / f"{name}_{split}.parquet")
 
 
 def save_model(model, name: str, meta: dict) -> None:

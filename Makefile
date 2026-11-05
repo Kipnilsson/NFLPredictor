@@ -22,3 +22,10 @@ jev-dry:
 
 # Full dev pipeline from scratch (no 2025 data is touched)
 dev: prep train curves eval-dev
+
+.PHONY: test jev-pilot-preview
+test:
+	$(PY) -m unittest discover -s tests -v
+
+jev-pilot-preview:
+	$(PY) -m src.jev.pilot --plays 20

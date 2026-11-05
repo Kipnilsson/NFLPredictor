@@ -1,4 +1,4 @@
-"""Evaluate every approach that has a prediction file for a split.
+"""Evaluate explicitly selected main approaches for a split.
 
 Usage:
     python -m src.eval.run --split dev
@@ -18,6 +18,7 @@ import itertools
 import json
 
 import polars as pl
+import numpy as np
 
 from src import config
 from src.data import load_split, xy
@@ -37,13 +38,21 @@ def predict_specialists(split: str) -> None:
         save_predictions(df, load_model(name).predict_proba(X)[:, 1], name, split)
 
 
-def gather(split: str) -> tuple[pl.DataFrame, list[str], dict[str, int]]:
+def gather(split: str, models: list[str] | None = None) -> tuple[pl.DataFrame, list[str], dict[str, int]]:
     plays = load_split(split).select(["game_id", "play_id", config.LABEL] + config.FEATURES)
-    files = sorted(config.PRED_DIR.glob(f"*_{split}.parquet"))
+    if models is None:
+        models = SPECIALISTS + (["jev"] if (config.PRED_DIR / f"jev_{split}.parquet").exists() else [])
+    if not models or len(models) != len(set(models)) or any(n not in SPECIALISTS + ["jev"] for n in models):
+        raise ValueError("Choose distinct main models: baseline, logreg, gbt, jev.")
+    files = [config.PRED_DIR / f"{name}_{split}.parquet" for name in models]
     names, coverage, joined = [], {}, plays
     for f in files:
         name = f.name.removesuffix(f"_{split}.parquet")
         pred = pl.read_parquet(f).select(["game_id", "play_id", config.LABEL, "p_dropback"])
+        assert pred.select(["game_id", "play_id"]).is_unique().all(), f"{name}: duplicate play IDs"
+        probabilities = pred["p_dropback"].to_numpy()
+        assert np.isfinite(probabilities).all() and ((probabilities >= 0) & (probabilities <= 1)).all(), f"{name}: invalid probabilities"
+        assert pred.select(["game_id", "play_id"]).join(plays.select(["game_id", "play_id"]), on=["game_id", "play_id"], how="anti").height == 0, f"{name}: unknown plays"
         check = plays.join(pred, on=["game_id", "play_id"], how="inner")
         assert (check[config.LABEL] == check[f"{config.LABEL}_right"]).all(), name
         coverage[name] = pred.height
@@ -57,17 +66,20 @@ def gather(split: str) -> tuple[pl.DataFrame, list[str], dict[str, int]]:
 def main(argv=None) -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--split", choices=["dev", "test"], default="dev")
+    ap.add_argument("--models", nargs="+", choices=SPECIALISTS + ["jev"])
     ap.add_argument("--B", type=int, default=2000)
     args = ap.parse_args(argv)
 
     if args.split == "test":
         predict_specialists("test")
 
-    df, names, coverage = gather(args.split)
+    df, names, coverage = gather(args.split, args.models)
     out_dir = config.RESULTS_DIR / f"eval_{args.split}"
     out_dir.mkdir(parents=True, exist_ok=True)
 
     common = df.drop_nulls(names)
+    if not names or common.height == 0:
+        raise ValueError("No common predictions; evaluation stopped.")
     report = {"split": args.split, "approaches": names, "coverage": coverage,
               "common_set": {"n_plays": common.height,
                              "n_games": common["game_id"].n_unique()},
@@ -84,7 +96,7 @@ def main(argv=None) -> None:
     for a, b in itertools.permutations(names, 2):
         if names.index(a) > names.index(b):
             continue
-        sub = df.drop_nulls([a, b])
+        sub = common
         paired[f"{a} - {b}"] = paired_bootstrap(sub, a, b, B=args.B)
 
     (out_dir / "metrics.json").write_text(json.dumps(report, indent=2))

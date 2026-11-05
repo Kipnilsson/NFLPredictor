@@ -65,13 +65,29 @@ within a seed, and the dev-selected hyperparameters are held fixed.
 60 complete 2024 games chosen by seed 74 from sorted game IDs (7,258 plays, 7,204 unique
 prompts). Used for prompt-wording checks and the numeric-vs-verbal and option-order checks.
 
-## D11. JEV SDK adapter — OPEN
-Two PyPI packages match the name (`typesafe` 0.9.1, `typesafe-sdk` 0.7.5). Neither is
-installed until the team confirms which one is the course SDK. Pending:
-- confirm package + version, and add it to `requirements.txt`
-- implement `src/jev/client.py:TypeSafeBackend.choose` with the `Choice` primitive
-- record the pinned versioned model ID (env var `JEV_MODEL_ID`)
+## D11. JEV direct HTTP integration — IMPLEMENTED (2026-11-05)
+Charlie owns JEV. Reused the earlier demo's standard-library HTTP approach, precise
+operational labels, authentication and response checks. Default pinned model:
+`jev-1.13.0`. No additional API client package is required. Charlie requested no live
+pilot during this session; adding the key to `.env` does not authorize or trigger one.
 
-## D12. JEV prompt freeze — OPEN
-Template `v1` is in `src/jev/template.py`. Record the freeze here (date, template version,
-dev checks run) before any test-set JEV call.
+## D12. JEV prompt freeze — PENDING LIVE CHECKS (2026-11-05)
+Candidate `v2-http`: fixed numeric facts, operational dropback/non-dropback-run criteria,
+no identifying information or outcomes. Secondary verbal and reversed checks are
+separate from the benchmark. Reviewed code preserves the eight facts and explicitly
+allows OT. RPOs are labeled by the recorded qb_dropback value, not inferred intent.
+Run a small development pilot and inspect checks, then use `src.jev.freeze` to record
+an evidence-backed freeze. No freeze has been claimed or recorded yet.
+
+## D13. Paid inference controls — IMPLEMENTED (2026-11-05)
+Preview by default. Execution requires `--cache-only` or explicit `--live` plus a positive
+`--max-requests`. Preflight counts unique uncached full requests and stops if over budget.
+HTTP attempts count against the cap even on failure; no automatic retries. A per-clone
+writer lock avoids duplicate simultaneous requests. Cache identity preserves criteria
+order and includes all request content. Same-cache replay makes no HTTP calls.
+
+## D14. Output separation — IMPLEMENTED (2026-11-05)
+Main benchmark predictions live in results/predictions, pilot reports in results/jev/pilots,
+and secondary variants in results/jev/variants. Main evaluation explicitly selects primary
+approaches; every paired comparison uses the selected models' common set. The notebook
+reads saved artifacts only and never performs inference, downloads, training or final eval.
