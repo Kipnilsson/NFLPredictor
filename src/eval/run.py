@@ -1,0 +1,111 @@
+"""Evaluate every approach that has a prediction file for a split.
+
+Usage:
+    python -m src.eval.run --split dev
+    NFL_FINAL_EVAL=1 python -m src.eval.run --split test   # final evaluation only
+
+For --split test, specialist predictions are generated from the saved (dev-selected)
+models first. JEV predictions come from src.jev.run.
+
+Outputs go to results/eval_{split}/. Every metric is computed on the COMMON set of plays
+that all approaches predicted, so comparisons use identical plays. Each approach is also
+reported on its own full coverage for reference.
+"""
+from __future__ import annotations
+
+import argparse
+import itertools
+import json
+
+import polars as pl
+
+from src import config
+from src.data import load_split, xy
+from src.eval.bootstrap import paired_bootstrap
+from src.eval.metrics import all_metrics
+from src.eval.reliability import plot_reliability, reliability_table
+from src.eval.situational import breakdown
+from src.models.common import load_model, save_predictions
+
+SPECIALISTS = ["baseline", "logreg", "gbt"]
+
+
+def predict_specialists(split: str) -> None:
+    df = load_split(split)  # raises unless final eval is enabled for test
+    X, _ = xy(df)
+    for name in SPECIALISTS:
+        save_predictions(df, load_model(name).predict_proba(X)[:, 1], name, split)
+
+
+def gather(split: str) -> tuple[pl.DataFrame, list[str], dict[str, int]]:
+    plays = load_split(split).select(["game_id", "play_id", config.LABEL] + config.FEATURES)
+    files = sorted(config.PRED_DIR.glob(f"*_{split}.parquet"))
+    names, coverage, joined = [], {}, plays
+    for f in files:
+        name = f.name.removesuffix(f"_{split}.parquet")
+        pred = pl.read_parquet(f).select(["game_id", "play_id", config.LABEL, "p_dropback"])
+        check = plays.join(pred, on=["game_id", "play_id"], how="inner")
+        assert (check[config.LABEL] == check[f"{config.LABEL}_right"]).all(), name
+        coverage[name] = pred.height
+        joined = joined.join(pred.select(["game_id", "play_id",
+                                          pl.col("p_dropback").alias(name)]),
+                             on=["game_id", "play_id"], how="left")
+        names.append(name)
+    return joined, names, coverage
+
+
+def main(argv=None) -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--split", choices=["dev", "test"], default="dev")
+    ap.add_argument("--B", type=int, default=2000)
+    args = ap.parse_args(argv)
+
+    if args.split == "test":
+        predict_specialists("test")
+
+    df, names, coverage = gather(args.split)
+    out_dir = config.RESULTS_DIR / f"eval_{args.split}"
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    common = df.drop_nulls(names)
+    report = {"split": args.split, "approaches": names, "coverage": coverage,
+              "common_set": {"n_plays": common.height,
+                             "n_games": common["game_id"].n_unique()},
+              "on_common_set": {}, "on_own_coverage": {}, "reliability_common": {}}
+    y_common = common[config.LABEL].to_numpy()
+    for n in names:
+        report["on_common_set"][n] = all_metrics(y_common, common[n].to_numpy())
+        own = df.drop_nulls([n])
+        report["on_own_coverage"][n] = all_metrics(own[config.LABEL].to_numpy(),
+                                                   own[n].to_numpy())
+        report["reliability_common"][n] = reliability_table(y_common, common[n].to_numpy())
+
+    paired = {}
+    for a, b in itertools.permutations(names, 2):
+        if names.index(a) > names.index(b):
+            continue
+        sub = df.drop_nulls([a, b])
+        paired[f"{a} - {b}"] = paired_bootstrap(sub, a, b, B=args.B)
+
+    (out_dir / "metrics.json").write_text(json.dumps(report, indent=2))
+    (out_dir / "paired_bootstrap.json").write_text(json.dumps(paired, indent=2))
+    breakdown(common, names).write_csv(out_dir / "situational.csv")
+
+    config.FIG_DIR.mkdir(parents=True, exist_ok=True)
+    plot_reliability({n: (y_common, common[n].to_numpy()) for n in names if n != "baseline"},
+                     config.FIG_DIR / f"reliability_{args.split}.png",
+                     f"Reliability, {args.split} common set (n={common.height:,} plays)")
+
+    print(f"common set: {common.height} plays / {common['game_id'].n_unique()} games")
+    for n in names:
+        m = report["on_common_set"][n]
+        print(f"{n:>12}  acc={m['accuracy']:.4f}  bal_acc={m['balanced_accuracy']:.4f}  "
+              f"brier={m['brier']:.4f}")
+    for k, v in paired.items():
+        a = v["accuracy"]
+        print(f"{k:>24}  acc diff={a['diff']:+.4f}  95% CI [{a['ci95'][0]:+.4f}, "
+              f"{a['ci95'][1]:+.4f}]  brier diff={v['brier']['diff']:+.4f}")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,20 @@
+# Data (regenerate with `python -m src.prep`)
+data/
+
+# JEV response cache: gitignored, but BACK IT UP (see CLAUDE.md)
+cache/
+
+# Regenerable model binaries and per-play predictions
+results/models/
+results/predictions/
+
+# Secrets
+.env
+.env.*
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.DS_Store

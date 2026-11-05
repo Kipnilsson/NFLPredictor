@@ -1,0 +1,54 @@
+{
+  "2021": {
+    "raw_rows": 49922,
+    "after_reg_season": 47651,
+    "after_run_pass": 34139,
+    "dropped_qb_kneel": 0,
+    "dropped_qb_spike": 0,
+    "dropped_two_point_attempt": 153,
+    "dropped_aborted_play": 105,
+    "dropped_play_deleted": 0,
+    "dropped_missing_feature": 0,
+    "dropped_missing_label": 0,
+    "eligible": 33881
+  },
+  "2022": {
+    "raw_rows": 49434,
+    "after_reg_season": 47157,
+    "after_run_pass": 33770,
+    "dropped_qb_kneel": 0,
+    "dropped_qb_spike": 0,
+    "dropped_two_point_attempt": 118,
+    "dropped_aborted_play": 108,
+    "dropped_play_deleted": 0,
+    "dropped_missing_feature": 0,
+    "dropped_missing_label": 0,
+    "eligible": 33544
+  },
+  "2023": {
+    "raw_rows": 49665,
+    "after_reg_season": 47399,
+    "after_run_pass": 33957,
+    "dropped_qb_kneel": 0,
+    "dropped_qb_spike": 0,
+    "dropped_two_point_attempt": 121,
+    "dropped_aborted_play": 94,
+    "dropped_play_deleted": 0,
+    "dropped_missing_feature": 0,
+    "dropped_missing_label": 0,
+    "eligible": 33742
+  },
+  "2024": {
+    "raw_rows": 49492,
+    "after_reg_season": 47274,
+    "after_run_pass": 33470,
+    "dropped_qb_kneel": 0,
+    "dropped_qb_spike": 0,
+    "dropped_two_point_attempt": 135,
+    "dropped_aborted_play": 111,
+    "dropped_play_deleted": 0,
+    "dropped_missing_feature": 0,
+    "dropped_missing_label": 0,
+    "eligible": 33224
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "baseline": {
+    "params": {
+      "train_rate": 0.609853015311317
+    },
+    "log_loss": 0.6708003666607086,
+    "brier": 0.23890941025469853,
+    "accuracy": 0.6054057307970142
+  },
+  "logreg": {
+    "params": {
+      "C": 10.0
+    },
+    "log_loss": 0.5911955305422499,
+    "brier": 0.20195006110167063,
+    "accuracy": 0.6749036840837949
+  },
+  "gbt": {
+    "params": {
+      "learning_rate": 0.03,
+      "max_leaf_nodes": 31,
+      "min_samples_leaf": 100
+    },
+    "log_loss": 0.5257428473796586,
+    "brier": 0.17873632109933538,
+    "accuracy": 0.7129785697086444
+  }
+}
