@@ -18,6 +18,18 @@ human reviewed.
 - **Human review needed:** decisions D1–D10, and the JEV template wording.
 
 
+## 2026-11-14: Claude Code (Claude Opus 5.5), run by Will Mellis
+- Drafted the 5-slide presentation deck and speaker notes from the proposal, the course
+  rubric and the committed dev results (`results/eval_dev/`, `results/model_selection/`);
+  copied the outline and notes to `docs/presentation.md`. JEV numbers left as `[__]`.
+- Set up a local environment, reran `src.prep` (2021–2024 counts matched the committed
+  `results/filter_counts.json`), ran the 20 offline tests (all passed), and previewed
+  the JEV pilot, checks and benchmark request counts. No API requests were made; no code
+  was changed.
+- **Human review needed:** check every slide number against `results/`, the wording of
+  the "changes from the proposal" table, and the speaker-note timing in rehearsal.
+
+
 ## 2026-11-05: OpenAI Codex, run by Charlie Martin
 - Adapted the earlier demo's direct HTTP JEV integration; removed the unimplemented
   API client placeholder and package-selection blocker.
