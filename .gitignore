@@ -4,8 +4,8 @@ data/
 # JEV response cache: gitignored, but BACK IT UP (see README.md)
 cache/
 
-# Regenerable model binaries and per-play predictions
-results/models/
+# Per-play predictions (regenerable). Trained models in results/models/ ARE committed,
+# so the dev-selected models are frozen before final evaluation.
 results/predictions/
 results/jev/variants/*.parquet
 

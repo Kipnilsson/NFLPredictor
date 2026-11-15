@@ -1,0 +1,14 @@
+{
+  "params": {
+    "learning_rate": 0.03,
+    "max_leaf_nodes": 31,
+    "min_samples_leaf": 100
+  },
+  "selected_on": "dev log_loss",
+  "seed": 74,
+  "dev": {
+    "log_loss": 0.5257428473796586,
+    "brier": 0.17873632109933538,
+    "accuracy": 0.7129785697086444
+  }
+}
