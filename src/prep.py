@@ -74,6 +74,26 @@ def sanity_checks(df: pl.DataFrame, season: int) -> None:
     assert (df["season"] == season).all()
 
 
+def prepare_season(season: int, refresh: bool = False):
+    raw = load_raw(season, refresh)
+    df, counts = filter_season(raw)
+    sanity_checks(df, season)
+    if df.is_empty():
+        raise ValueError(f"No eligible plays for {season}.")
+    if season == 2024 and df.height != config.CHECKPOINT_2024:
+        raise ValueError(f"2024 checkpoint expected {config.CHECKPOINT_2024}, got {df.height}.")
+    counts["games"] = df["game_id"].n_unique()
+    counts["dropbacks"] = int(df[config.LABEL].sum())
+    counts["runs"] = df.height - counts["dropbacks"]
+    out = df.select(config.BOOKKEEPING + config.FEATURES).sort(["game_id", "play_id"])
+    config.PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
+    path = config.PROCESSED_DIR / f"plays_{season}.parquet"
+    tmp = path.with_suffix(".tmp")
+    out.write_parquet(tmp)
+    tmp.replace(path)
+    return counts
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--include-test", action="store_true")
@@ -91,19 +111,9 @@ def main(argv=None) -> int:
     config.RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     all_counts = {}
     for season in seasons:
-        raw = load_raw(season, args.refresh)
-        df, counts = filter_season(raw)
-        sanity_checks(df, season)
-        out = df.select(config.BOOKKEEPING + [c for c in config.FEATURES]).sort(
-            ["game_id", "play_id"])
-        out.write_parquet(config.PROCESSED_DIR / f"plays_{season}.parquet")
+        counts = prepare_season(season, args.refresh)
         all_counts[season] = counts
         print(season, json.dumps(counts))
-
-    if 2024 in all_counts and all_counts[2024]["eligible"] != config.CHECKPOINT_2024:
-        print(f"CHECKPOINT FAILED: 2024 has {all_counts[2024]['eligible']} eligible plays, "
-              f"expected {config.CHECKPOINT_2024}. Investigate before continuing.")
-        return 1
 
     name = "filter_counts_with_test.json" if args.include_test else "filter_counts.json"
     (config.RESULTS_DIR / name).write_text(json.dumps(all_counts, indent=2))

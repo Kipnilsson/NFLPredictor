@@ -1,0 +1,16 @@
+{
+  "raw_rows": 49492,
+  "after_reg_season": 47274,
+  "after_run_pass": 33470,
+  "dropped_qb_kneel": 0,
+  "dropped_qb_spike": 0,
+  "dropped_two_point_attempt": 135,
+  "dropped_aborted_play": 111,
+  "dropped_play_deleted": 0,
+  "dropped_missing_feature": 0,
+  "dropped_missing_label": 0,
+  "eligible": 33224,
+  "games": 272,
+  "dropbacks": 20114,
+  "runs": 13110
+}

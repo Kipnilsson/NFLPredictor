@@ -1,0 +1,14 @@
+{
+  "timestamp": "2026-11-15T22:02:36.069005+00:00",
+  "model_id": "jev-1.13.0",
+  "template_version": "v2-http",
+  "fingerprint": "844ebbc2447b9f8bc3fcf986de05f68f59be528cb5caa1974494202b09aebe15",
+  "pilot_report": "results/jev/pilots/pilot_20_checks.json",
+  "pilot_report_sha256": "81fc096f43c0a104dff067395baf2d2ebab2c7cb495eae32967e23909f47d5da",
+  "main_variant": "numeric",
+  "main_labels": [
+    "dropback",
+    "designed_run"
+  ],
+  "selection_reason": "Prespecified numeric template and operational labels; no test tuning."
+}

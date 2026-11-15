@@ -22,7 +22,7 @@ import numpy as np
 
 from src import config
 from src.data import load_split, xy
-from src.eval.bootstrap import paired_bootstrap
+from src.eval.bootstrap import B_DEFAULT, paired_bootstrap
 from src.eval.metrics import all_metrics
 from src.eval.reliability import plot_reliability, reliability_table
 from src.eval.situational import breakdown
@@ -44,7 +44,11 @@ def gather(split: str, models: list[str] | None = None) -> tuple[pl.DataFrame, l
         models = SPECIALISTS + (["jev"] if (config.PRED_DIR / f"jev_{split}.parquet").exists() else [])
     if not models or len(models) != len(set(models)) or any(n not in SPECIALISTS + ["jev"] for n in models):
         raise ValueError("Choose distinct main models: baseline, logreg, gbt, jev.")
-    files = [config.PRED_DIR / f"{name}_{split}.parquet" for name in models]
+    return join_predictions(plays, models, split, config.PRED_DIR)
+
+
+def join_predictions(plays, models, split, prediction_dir):
+    files = [prediction_dir / f"{name}_{split}.parquet" for name in models]
     names, coverage, joined = [], {}, plays
     for f in files:
         name = f.name.removesuffix(f"_{split}.parquet")
@@ -63,6 +67,51 @@ def gather(split: str, models: list[str] | None = None) -> tuple[pl.DataFrame, l
     return joined, names, coverage
 
 
+def write_evaluation(df, names, coverage, split, out_dir, figure, *, B=B_DEFAULT, metadata=None):
+    """Write the same comparison artifacts for legacy and season benchmarks."""
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    common = df.drop_nulls(names)
+    if not names or common.height == 0:
+        raise ValueError("No common predictions; evaluation stopped.")
+    report = {"split": split, "approaches": names, "coverage": coverage,
+              "common_set": {"n_plays": common.height,
+                             "n_games": common["game_id"].n_unique()},
+              "on_common_set": {}, "on_own_coverage": {}, "reliability_common": {}}
+    if metadata:
+        report.update(metadata)
+    y_common = common[config.LABEL].to_numpy()
+    for n in names:
+        report["on_common_set"][n] = all_metrics(y_common, common[n].to_numpy())
+        own = df.drop_nulls([n])
+        report["on_own_coverage"][n] = all_metrics(own[config.LABEL].to_numpy(),
+                                                   own[n].to_numpy())
+        report["reliability_common"][n] = reliability_table(y_common, common[n].to_numpy())
+
+    paired = {}
+    for a, b in itertools.combinations(names, 2):
+        paired[f"{a} - {b}"] = paired_bootstrap(common, a, b, B=B)
+
+    (out_dir / "metrics.json").write_text(json.dumps(report, indent=2))
+    (out_dir / "paired_bootstrap.json").write_text(json.dumps(paired, indent=2))
+    breakdown(common, names).write_csv(out_dir / "situational.csv")
+
+    figure.parent.mkdir(parents=True, exist_ok=True)
+    plot_reliability({n: (y_common, common[n].to_numpy()) for n in names if n != "baseline"},
+                     figure,
+                     f"Reliability, {split} common set (n={common.height:,} plays)")
+
+    print(f"common set: {common.height} plays / {common['game_id'].n_unique()} games")
+    for n in names:
+        m = report["on_common_set"][n]
+        print(f"{n:>12}  acc={m['accuracy']:.4f}  bal_acc={m['balanced_accuracy']:.4f}  "
+              f"brier={m['brier']:.4f}")
+    for k, v in paired.items():
+        a = v["accuracy"]
+        print(f"{k:>24}  acc diff={a['diff']:+.4f}  95% CI [{a['ci95'][0]:+.4f}, "
+              f"{a['ci95'][1]:+.4f}]  brier diff={v['brier']['diff']:+.4f}")
+
+
 def main(argv=None) -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--split", choices=["dev", "test"], default="dev")
@@ -75,48 +124,8 @@ def main(argv=None) -> None:
 
     df, names, coverage = gather(args.split, args.models)
     out_dir = config.RESULTS_DIR / f"eval_{args.split}"
-    out_dir.mkdir(parents=True, exist_ok=True)
-
-    common = df.drop_nulls(names)
-    if not names or common.height == 0:
-        raise ValueError("No common predictions; evaluation stopped.")
-    report = {"split": args.split, "approaches": names, "coverage": coverage,
-              "common_set": {"n_plays": common.height,
-                             "n_games": common["game_id"].n_unique()},
-              "on_common_set": {}, "on_own_coverage": {}, "reliability_common": {}}
-    y_common = common[config.LABEL].to_numpy()
-    for n in names:
-        report["on_common_set"][n] = all_metrics(y_common, common[n].to_numpy())
-        own = df.drop_nulls([n])
-        report["on_own_coverage"][n] = all_metrics(own[config.LABEL].to_numpy(),
-                                                   own[n].to_numpy())
-        report["reliability_common"][n] = reliability_table(y_common, common[n].to_numpy())
-
-    paired = {}
-    for a, b in itertools.permutations(names, 2):
-        if names.index(a) > names.index(b):
-            continue
-        sub = common
-        paired[f"{a} - {b}"] = paired_bootstrap(sub, a, b, B=args.B)
-
-    (out_dir / "metrics.json").write_text(json.dumps(report, indent=2))
-    (out_dir / "paired_bootstrap.json").write_text(json.dumps(paired, indent=2))
-    breakdown(common, names).write_csv(out_dir / "situational.csv")
-
-    config.FIG_DIR.mkdir(parents=True, exist_ok=True)
-    plot_reliability({n: (y_common, common[n].to_numpy()) for n in names if n != "baseline"},
-                     config.FIG_DIR / f"reliability_{args.split}.png",
-                     f"Reliability, {args.split} common set (n={common.height:,} plays)")
-
-    print(f"common set: {common.height} plays / {common['game_id'].n_unique()} games")
-    for n in names:
-        m = report["on_common_set"][n]
-        print(f"{n:>12}  acc={m['accuracy']:.4f}  bal_acc={m['balanced_accuracy']:.4f}  "
-              f"brier={m['brier']:.4f}")
-    for k, v in paired.items():
-        a = v["accuracy"]
-        print(f"{k:>24}  acc diff={a['diff']:+.4f}  95% CI [{a['ci95'][0]:+.4f}, "
-              f"{a['ci95'][1]:+.4f}]  brier diff={v['brier']['diff']:+.4f}")
+    write_evaluation(df, names, coverage, args.split, out_dir,
+                     config.FIG_DIR / f"reliability_{args.split}.png", B=args.B)
 
 
 if __name__ == "__main__":

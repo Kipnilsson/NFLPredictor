@@ -145,3 +145,75 @@ be regenerated or obtained as documented artifacts. Training and evaluation do n
 - [Choice request/response format](https://docs.typesafe.ai/primitives/choice)
 - [Versioned models](https://docs.typesafe.ai/models)
 - [nflverse play-by-play](https://github.com/nflverse/nflverse-data/releases/tag/pbp)
+
+## Season benchmarks
+
+Use the committed specialist models directly. Each season has its own locked
+cohort, prediction files and reports. Model fitting is unnecessary. Install the
+pinned requirements for compatibility with the saved models.
+
+```sh
+PY=.venv/bin/python
+$PY -m src.benchmark 2024 --prepare
+$PY -m src.benchmark 2024 --preview --games 10
+NFL_FINAL_EVAL=1 $PY -m src.benchmark 2025 --prepare
+NFL_FINAL_EVAL=1 $PY -m src.benchmark 2025 --preview --games 10
+```
+
+Preview measures the exact number of new JEV requests without sending any.
+Choose either a seeded sample of whole games with `--games N` or all eligible
+games with `--all-games`. After the development prompt checks and freeze, repeat
+with `--lock` in place of `--preview`. The lock pins the game IDs, data hash,
+specialist model hashes, and JEV prompt/model fingerprint. The 2025 lock requires
+the prompt freeze, and all 2025 and 2026 commands require `NFL_FINAL_EVAL=1`.
+
+```sh
+# Repeat with 2025 and NFL_FINAL_EVAL=1 for the holdout.
+$PY -m src.benchmark 2024 --lock --games 10
+$PY -m src.benchmark 2024 --specialists
+# Replace APPROVED_CAP with the preview's confirmed new-request count.
+$PY -m src.benchmark 2024 --live --max-requests APPROVED_CAP
+```
+
+Specialists score every eligible play. JEV scores every eligible play in the
+locked sample. All four models are compared on exactly that sample, while a
+separate specialist report covers the full eligible season. Each per-model
+Parquet file stores game ID, play ID, season, observed label and P(dropback).
+The output folders under `results/benchmarks/<season>/` are:
+
+- `predictions/` for local per-play Parquet files.
+- `specialists/` and `head_to_head/` for comparison CSVs, metrics, reliability
+  plots, paired game-bootstrap intervals and situational breakdowns.
+
+Use `--cache-only` to materialize JEV predictions from a complete local cache.
+Use `--report` to regenerate the comparisons from existing prediction files.
+Completed predictions are reused and interrupted JEV runs resume from cached
+responses. Keep the locked cohort and its data snapshot together. 2024 is a
+development comparison. Use 2025 for held-out conclusions.
+
+### Prospective 2026 evaluation
+
+After freezing JEV, register a window **before its games are played**. The
+window starts the following Eastern calendar day. Choose the inclusive end date
+with the team and enter it as `YYYY-MM-DD`:
+
+```sh
+NFL_FINAL_EVAL=1 $PY -m src.benchmark 2026 --register-prospective YYYY-MM-DD
+```
+
+Registration records the timestamp and all model and prompt hashes. After the
+window closes, run `2026 --prepare --refresh`, then preview and lock the cohort
+using the same workflow. The benchmark checks the regular-season schedule and
+requires completed games with play-by-play coverage across the registered window.
+Report the 2026 window separately. It measures performance on games played after
+registration. JEV's actual training cutoff has not been established here, and API
+predictions generated after those games are a retrospective scoring step.
+
+For the presentation, preview sensitivity on the same 20 plays as the original
+pilot with `python -m src.jev.pilot --plays 20 --checks`. The pilot compares
+numeric phrasing with verbal phrasing and with reversed choice order, changing
+one factor at a time. Its report includes paired probability shifts, class flips
+at 0.5, predicted versus observed dropback rates, and a descriptive threshold
+sweep. The headline comparison retains the prespecified 0.5 threshold. Use
+the season benchmark's reliability plot and situational breakdown to check
+calibration and performance by football situation on a larger sample.

@@ -1,0 +1,935 @@
+{
+  "fingerprint": "844ebbc2447b9f8bc3fcf986de05f68f59be528cb5caa1974494202b09aebe15",
+  "status": "completed",
+  "timestamp": "2026-11-15T22:02:26.702747+00:00",
+  "template_version": "v2-http",
+  "model_id": "jev-1.13.0",
+  "source_sha256": "23370d5d10f8104d80d46a1fc5e61f4f6f5a3263fe96fe2dd629913cfcb08c06",
+  "n_distinct_plays": 20,
+  "checks_included": true,
+  "summary": {
+    "rows": 60,
+    "unique_requests": 60,
+    "cached_requests": 20,
+    "new_requests": 40,
+    "model_id": "jev-1.13.0",
+    "requests_sent": 40
+  },
+  "rows": [
+    {
+      "game_id": "2024_01_GB_PHI",
+      "play_id": "821",
+      "true_label": 1,
+      "variant": "numeric",
+      "reverse": false,
+      "cache_key": "fb3d707baf339c8682b51085f209e240efa1421f264d20c7c4351229f2fdcd3a",
+      "p_dropback": 0.8,
+      "usage": {
+        "input_tokens": 525,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.26800316595472395
+    },
+    {
+      "game_id": "2024_02_CHI_HOU",
+      "play_id": "739",
+      "true_label": 0,
+      "variant": "numeric",
+      "reverse": false,
+      "cache_key": "02bb7b24adba3650ca27f75cf83337ef990620e7744bbb9ba03b83cf7be86c62",
+      "p_dropback": 0.8,
+      "usage": {
+        "input_tokens": 524,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.15953845786862075
+    },
+    {
+      "game_id": "2024_02_IND_GB",
+      "play_id": "2751",
+      "true_label": 0,
+      "variant": "numeric",
+      "reverse": false,
+      "cache_key": "77ebb7b272025ee3c29a48047c5daec79e1f99ea90587ab1d58dd5abf0843adf",
+      "p_dropback": 0.89,
+      "usage": {
+        "input_tokens": 524,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.12134595797397196
+    },
+    {
+      "game_id": "2024_03_CAR_LV",
+      "play_id": "3552",
+      "true_label": 1,
+      "variant": "numeric",
+      "reverse": false,
+      "cache_key": "a098e9a83aa783272ebcd6a35ea77603e61ab398659d35bf5417267ba5687bcf",
+      "p_dropback": 0.65,
+      "usage": {
+        "input_tokens": 525,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.21675254218280315
+    },
+    {
+      "game_id": "2024_04_KC_LAC",
+      "play_id": "1914",
+      "true_label": 1,
+      "variant": "numeric",
+      "reverse": false,
+      "cache_key": "9c253e08cece5b6faafb33d1e86270d4bd69d28ad41df865a87e728c2d505a1a",
+      "p_dropback": 0.95,
+      "usage": {
+        "input_tokens": 524,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.25276475003920496
+    },
+    {
+      "game_id": "2024_04_KC_LAC",
+      "play_id": "3832",
+      "true_label": 0,
+      "variant": "numeric",
+      "reverse": false,
+      "cache_key": "2a528b9d1f62376665aa2def57ffff2bf581f1e5290b993b6fb02775f5f92fa0",
+      "p_dropback": 0.87,
+      "usage": {
+        "input_tokens": 524,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.17411920800805092
+    },
+    {
+      "game_id": "2024_05_NYG_SEA",
+      "play_id": "1007",
+      "true_label": 0,
+      "variant": "numeric",
+      "reverse": false,
+      "cache_key": "6380187992112d055bdbb0ad70c0315f26683e3c928750dec477e10262a283d2",
+      "p_dropback": 0.7,
+      "usage": {
+        "input_tokens": 523,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.1390525831375271
+    },
+    {
+      "game_id": "2024_07_LAC_ARI",
+      "play_id": "1541",
+      "true_label": 1,
+      "variant": "numeric",
+      "reverse": false,
+      "cache_key": "54448f771e9f565d2c1f8c8952165bb9d7c0bb7a7bf5df093cf2e8ead9a656a5",
+      "p_dropback": 0.91,
+      "usage": {
+        "input_tokens": 524,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.13781258300878108
+    },
+    {
+      "game_id": "2024_08_NYJ_NE",
+      "play_id": "4228",
+      "true_label": 1,
+      "variant": "numeric",
+      "reverse": false,
+      "cache_key": "72d61b525307581c135138ce11551f2f1e5ec24abb881bec9483506849ab5bdd",
+      "p_dropback": 0.88,
+      "usage": {
+        "input_tokens": 523,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.12278395798057318
+    },
+    {
+      "game_id": "2024_09_WAS_NYG",
+      "play_id": "2618",
+      "true_label": 0,
+      "variant": "numeric",
+      "reverse": false,
+      "cache_key": "2aae22630a58ec87e66794c43126fdcd95d110a970f42caac12e6fc7285bd5fa",
+      "p_dropback": 0.92,
+      "usage": {
+        "input_tokens": 526,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.24301079218275845
+    },
+    {
+      "game_id": "2024_11_CIN_LAC",
+      "play_id": "2962",
+      "true_label": 0,
+      "variant": "numeric",
+      "reverse": false,
+      "cache_key": "ec416b7560e2d19698d3541b9394bbc9afc8a206631e1a923f57f077a444de85",
+      "p_dropback": 0.63,
+      "usage": {
+        "input_tokens": 524,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.12197470804676414
+    },
+    {
+      "game_id": "2024_11_HOU_DAL",
+      "play_id": "817",
+      "true_label": 1,
+      "variant": "numeric",
+      "reverse": false,
+      "cache_key": "f5544e9b6a75dbc217afe17225753a8cf4f243b1987c292e60d2265f7c746b62",
+      "p_dropback": 0.88,
+      "usage": {
+        "input_tokens": 524,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.2644064170308411
+    },
+    {
+      "game_id": "2024_11_HOU_DAL",
+      "play_id": "3486",
+      "true_label": 0,
+      "variant": "numeric",
+      "reverse": false,
+      "cache_key": "cf1b6b5818babb57567f8c608547b23d7b5e3978f3eb6ec010f92ae07220c901",
+      "p_dropback": 0.87,
+      "usage": {
+        "input_tokens": 526,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.1419739171396941
+    },
+    {
+      "game_id": "2024_12_DET_IND",
+      "play_id": "838",
+      "true_label": 1,
+      "variant": "numeric",
+      "reverse": false,
+      "cache_key": "1b3d886184ea3ff082f6918cdf0ca9350e6bf0049061a74665868e7ee801a9d1",
+      "p_dropback": 0.92,
+      "usage": {
+        "input_tokens": 524,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.1419956658501178
+    },
+    {
+      "game_id": "2024_12_KC_CAR",
+      "play_id": "287",
+      "true_label": 0,
+      "variant": "numeric",
+      "reverse": false,
+      "cache_key": "17987f85ec8d413e581be1acc762c7557c8de1eac195d0a9af702afb82d74c66",
+      "p_dropback": 0.83,
+      "usage": {
+        "input_tokens": 525,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.23579487507231534
+    },
+    {
+      "game_id": "2024_13_CHI_DET",
+      "play_id": "2380",
+      "true_label": 0,
+      "variant": "numeric",
+      "reverse": false,
+      "cache_key": "9c62e1c8afdc0a1649bee1a330e730991193b8a3b0b67f9a0d47f97bbb99df51",
+      "p_dropback": 0.86,
+      "usage": {
+        "input_tokens": 525,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.13410908309742808
+    },
+    {
+      "game_id": "2024_14_CHI_SF",
+      "play_id": "2113",
+      "true_label": 0,
+      "variant": "numeric",
+      "reverse": false,
+      "cache_key": "a1c9dd06b248e2642b4a7181143b648a7d59da9282f786409b3b4bc0fbbbd6f5",
+      "p_dropback": 0.83,
+      "usage": {
+        "input_tokens": 525,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.1367691250052303
+    },
+    {
+      "game_id": "2024_17_TEN_JAX",
+      "play_id": "110",
+      "true_label": 1,
+      "variant": "numeric",
+      "reverse": false,
+      "cache_key": "93b698b039f551d7cb81a17aa195c033fa104cfcc9a003e6cf0788527d076e70",
+      "p_dropback": 0.92,
+      "usage": {
+        "input_tokens": 524,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.24344045901671052
+    },
+    {
+      "game_id": "2024_17_TEN_JAX",
+      "play_id": "2708",
+      "true_label": 1,
+      "variant": "numeric",
+      "reverse": false,
+      "cache_key": "af1931df3dd43862450594a91ede9e1e65a4e8b13ae2ba62fbdb35d0103b14b7",
+      "p_dropback": 0.93,
+      "usage": {
+        "input_tokens": 525,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.12961349985562265
+    },
+    {
+      "game_id": "2024_18_NYG_PHI",
+      "play_id": "3807",
+      "true_label": 1,
+      "variant": "numeric",
+      "reverse": false,
+      "cache_key": "93c2debd2bc249869108385212542afa82e42d2075ca414677ac98a6aef4250b",
+      "p_dropback": 0.89,
+      "usage": {
+        "input_tokens": 523,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.11825929093174636
+    },
+    {
+      "game_id": "2024_01_GB_PHI",
+      "play_id": "821",
+      "true_label": 1,
+      "variant": "verbal",
+      "reverse": false,
+      "cache_key": "bbdac99bc7d1bb6e7e3330b3d2c828c0ab89180239ed2dfc3192efff5e89ded3",
+      "p_dropback": 0.52,
+      "usage": {
+        "input_tokens": 493,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.2435648748651147
+    },
+    {
+      "game_id": "2024_02_CHI_HOU",
+      "play_id": "739",
+      "true_label": 0,
+      "variant": "verbal",
+      "reverse": false,
+      "cache_key": "cd5bd8b637f362ac069693a562cb231c071f42b0f345a1c795e338d056292927",
+      "p_dropback": 0.85,
+      "usage": {
+        "input_tokens": 488,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.13350229198113084
+    },
+    {
+      "game_id": "2024_02_IND_GB",
+      "play_id": "2751",
+      "true_label": 0,
+      "variant": "verbal",
+      "reverse": false,
+      "cache_key": "ac6fcc48e36f844e1c3885444147b3183e354a36ee28270b5216bcdde42a9e41",
+      "p_dropback": 0.82,
+      "usage": {
+        "input_tokens": 489,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.13317533303052187
+    },
+    {
+      "game_id": "2024_03_CAR_LV",
+      "play_id": "3552",
+      "true_label": 1,
+      "variant": "verbal",
+      "reverse": false,
+      "cache_key": "c7212ff90f488dcbbfea16329d1a2bfa8f69d12c42aee322cc41c2dd96bb689b",
+      "p_dropback": 0.82,
+      "usage": {
+        "input_tokens": 491,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.22149937483482063
+    },
+    {
+      "game_id": "2024_04_KC_LAC",
+      "play_id": "1914",
+      "true_label": 1,
+      "variant": "verbal",
+      "reverse": false,
+      "cache_key": "aece9fc4c15be874f4e4816aff26985ff6cc6bf378ef79699f693245c04c6063",
+      "p_dropback": 0.98,
+      "usage": {
+        "input_tokens": 488,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.1199531250167638
+    },
+    {
+      "game_id": "2024_04_KC_LAC",
+      "play_id": "3832",
+      "true_label": 0,
+      "variant": "verbal",
+      "reverse": false,
+      "cache_key": "563b806ce1ff71778205d5da4f5c70f5b3ce64fb28fe5b46c308079444063ba5",
+      "p_dropback": 0.56,
+      "usage": {
+        "input_tokens": 487,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.15710354200564325
+    },
+    {
+      "game_id": "2024_05_NYG_SEA",
+      "play_id": "1007",
+      "true_label": 0,
+      "variant": "verbal",
+      "reverse": false,
+      "cache_key": "437ce47d28135f58008df39fbfbea6e124ffea614e6cf68ca694e39393ddf8d0",
+      "p_dropback": 0.75,
+      "usage": {
+        "input_tokens": 488,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.2210267090704292
+    },
+    {
+      "game_id": "2024_07_LAC_ARI",
+      "play_id": "1541",
+      "true_label": 1,
+      "variant": "verbal",
+      "reverse": false,
+      "cache_key": "32d5671a69a04a5548d26112db1cf3b5e7f546583f0cf0970f15487958ba1f73",
+      "p_dropback": 0.88,
+      "usage": {
+        "input_tokens": 488,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.13175508403219283
+    },
+    {
+      "game_id": "2024_08_NYJ_NE",
+      "play_id": "4228",
+      "true_label": 1,
+      "variant": "verbal",
+      "reverse": false,
+      "cache_key": "c8d772a7a8fcc981b0b400d8e4059ab4898dfb29096860cb57a93a5006431344",
+      "p_dropback": 0.89,
+      "usage": {
+        "input_tokens": 488,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.29951454093679786
+    },
+    {
+      "game_id": "2024_09_WAS_NYG",
+      "play_id": "2618",
+      "true_label": 0,
+      "variant": "verbal",
+      "reverse": false,
+      "cache_key": "a7f4716c58ec8e5f78140fa36ce9ce243054177f196ddf8f67a1ed6f739487b0",
+      "p_dropback": 0.82,
+      "usage": {
+        "input_tokens": 491,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.13923070789314806
+    },
+    {
+      "game_id": "2024_11_CIN_LAC",
+      "play_id": "2962",
+      "true_label": 0,
+      "variant": "verbal",
+      "reverse": false,
+      "cache_key": "4304cf94758c60690be1c97e2837dc5061cc49e68911d44b172b19ac436a8c99",
+      "p_dropback": 0.31,
+      "usage": {
+        "input_tokens": 492,
+        "output_tokens": 37
+      },
+      "original_latency_s": 0.1979651669971645
+    },
+    {
+      "game_id": "2024_11_HOU_DAL",
+      "play_id": "817",
+      "true_label": 1,
+      "variant": "verbal",
+      "reverse": false,
+      "cache_key": "1985e39ac3a5db1daf664a0d15c47c70f14be2b56258fd06427d446bd58eee49",
+      "p_dropback": 0.87,
+      "usage": {
+        "input_tokens": 488,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.17964250012300909
+    },
+    {
+      "game_id": "2024_11_HOU_DAL",
+      "play_id": "3486",
+      "true_label": 0,
+      "variant": "verbal",
+      "reverse": false,
+      "cache_key": "0326df0f428ce96c75492dafdbc826de4dfa4a4c65097da95eb2ff00f5d2edfb",
+      "p_dropback": 0.65,
+      "usage": {
+        "input_tokens": 489,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.1485945419408381
+    },
+    {
+      "game_id": "2024_12_DET_IND",
+      "play_id": "838",
+      "true_label": 1,
+      "variant": "verbal",
+      "reverse": false,
+      "cache_key": "0fa368df6387cb61e7788fac9331f40c7e3359748b7bab217680ee5104b9f95c",
+      "p_dropback": 0.95,
+      "usage": {
+        "input_tokens": 490,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.14044591691344976
+    },
+    {
+      "game_id": "2024_12_KC_CAR",
+      "play_id": "287",
+      "true_label": 0,
+      "variant": "verbal",
+      "reverse": false,
+      "cache_key": "940da893cabfb47307d3e2f338f1adf80cb2e56a20f0c69290af4e46b4461908",
+      "p_dropback": 0.76,
+      "usage": {
+        "input_tokens": 490,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.13183870795182884
+    },
+    {
+      "game_id": "2024_13_CHI_DET",
+      "play_id": "2380",
+      "true_label": 0,
+      "variant": "verbal",
+      "reverse": false,
+      "cache_key": "d921ae80e70287e0b87b97ca0d51c62a980c99539f5e3350f965e987fc3063b2",
+      "p_dropback": 0.92,
+      "usage": {
+        "input_tokens": 489,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.20820291712880135
+    },
+    {
+      "game_id": "2024_14_CHI_SF",
+      "play_id": "2113",
+      "true_label": 0,
+      "variant": "verbal",
+      "reverse": false,
+      "cache_key": "8f94a6fe069125ca89c6b912aafc976c375128e9a3f75489cf5f7a54915fe14c",
+      "p_dropback": 0.94,
+      "usage": {
+        "input_tokens": 490,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.16293912497349083
+    },
+    {
+      "game_id": "2024_17_TEN_JAX",
+      "play_id": "110",
+      "true_label": 1,
+      "variant": "verbal",
+      "reverse": false,
+      "cache_key": "b6cf82618a4e9e35767e90eb888fd3144e1cae710e72d2f7a842f27c0e70ca97",
+      "p_dropback": 0.95,
+      "usage": {
+        "input_tokens": 486,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.13775633391924202
+    },
+    {
+      "game_id": "2024_17_TEN_JAX",
+      "play_id": "2708",
+      "true_label": 1,
+      "variant": "verbal",
+      "reverse": false,
+      "cache_key": "726179cca32c67e0438771bcc9f55531f29dab2c0b233dc51da2aa5fd503ab32",
+      "p_dropback": 0.94,
+      "usage": {
+        "input_tokens": 489,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.22301433398388326
+    },
+    {
+      "game_id": "2024_18_NYG_PHI",
+      "play_id": "3807",
+      "true_label": 1,
+      "variant": "verbal",
+      "reverse": false,
+      "cache_key": "56e6bca15348d5ba034d9a5bed00bdfc536178dc2fe1ecd654dcf5c083181457",
+      "p_dropback": 0.89,
+      "usage": {
+        "input_tokens": 488,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.1290556660387665
+    },
+    {
+      "game_id": "2024_01_GB_PHI",
+      "play_id": "821",
+      "true_label": 1,
+      "variant": "numeric",
+      "reverse": true,
+      "cache_key": "66c1717cee3ab9c8d73ea8ca5617a22f1ed231754c20e4d74a6b9822ac38224c",
+      "p_dropback": 0.79,
+      "usage": {
+        "input_tokens": 525,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.13906166702508926
+    },
+    {
+      "game_id": "2024_02_CHI_HOU",
+      "play_id": "739",
+      "true_label": 0,
+      "variant": "numeric",
+      "reverse": true,
+      "cache_key": "957eda36e65216751bf182929295d4773a8706b693d49e54ae034cfc3cdba59b",
+      "p_dropback": 0.86,
+      "usage": {
+        "input_tokens": 524,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.22642537485808134
+    },
+    {
+      "game_id": "2024_02_IND_GB",
+      "play_id": "2751",
+      "true_label": 0,
+      "variant": "numeric",
+      "reverse": true,
+      "cache_key": "72bc77edf0d0769d2387e508348b2255872efc8bae5bcad1593c9afefdcd165b",
+      "p_dropback": 0.88,
+      "usage": {
+        "input_tokens": 524,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.11379458382725716
+    },
+    {
+      "game_id": "2024_03_CAR_LV",
+      "play_id": "3552",
+      "true_label": 1,
+      "variant": "numeric",
+      "reverse": true,
+      "cache_key": "143e78e04105767197c8a5856c68b22a9e647868f3992797688538b52529ad5e",
+      "p_dropback": 0.69,
+      "usage": {
+        "input_tokens": 525,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.13326295814476907
+    },
+    {
+      "game_id": "2024_04_KC_LAC",
+      "play_id": "1914",
+      "true_label": 1,
+      "variant": "numeric",
+      "reverse": true,
+      "cache_key": "8310ec81fdd373e83d1eb87f7a0489f71a406ad3503dff7e03f25987388cc929",
+      "p_dropback": 0.95,
+      "usage": {
+        "input_tokens": 524,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.17635254189372063
+    },
+    {
+      "game_id": "2024_04_KC_LAC",
+      "play_id": "3832",
+      "true_label": 0,
+      "variant": "numeric",
+      "reverse": true,
+      "cache_key": "7e4089ad9480b9e1e9751b702cf8bbe02202e046613f0ab417f52bb4f71a57e3",
+      "p_dropback": 0.84,
+      "usage": {
+        "input_tokens": 524,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.12862058309838176
+    },
+    {
+      "game_id": "2024_05_NYG_SEA",
+      "play_id": "1007",
+      "true_label": 0,
+      "variant": "numeric",
+      "reverse": true,
+      "cache_key": "22537879d703ee14671494726e09878b8d90c17abc60f5d3322343479254c0e7",
+      "p_dropback": 0.73,
+      "usage": {
+        "input_tokens": 523,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.15567491692490876
+    },
+    {
+      "game_id": "2024_07_LAC_ARI",
+      "play_id": "1541",
+      "true_label": 1,
+      "variant": "numeric",
+      "reverse": true,
+      "cache_key": "af450921e99fec36e071125f3df4b2033dc70f7a03ca68f14de863fde5e69386",
+      "p_dropback": 0.91,
+      "usage": {
+        "input_tokens": 524,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.12215733411721885
+    },
+    {
+      "game_id": "2024_08_NYJ_NE",
+      "play_id": "4228",
+      "true_label": 1,
+      "variant": "numeric",
+      "reverse": true,
+      "cache_key": "8f81028f07a4e80d84e9053f5d64dfc8fb28528e5986bf93890d4707c533b79a",
+      "p_dropback": 0.88,
+      "usage": {
+        "input_tokens": 523,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.22461441694758832
+    },
+    {
+      "game_id": "2024_09_WAS_NYG",
+      "play_id": "2618",
+      "true_label": 0,
+      "variant": "numeric",
+      "reverse": true,
+      "cache_key": "d9718406577052e8df88eb703c8b6655ae2d2ad009c8297d6c8850b68ec67a3e",
+      "p_dropback": 0.89,
+      "usage": {
+        "input_tokens": 526,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.16448124987073243
+    },
+    {
+      "game_id": "2024_11_CIN_LAC",
+      "play_id": "2962",
+      "true_label": 0,
+      "variant": "numeric",
+      "reverse": true,
+      "cache_key": "a2e7bdb13d73ba562b66799f5ad5a7ae7fef98c29636bcbdb88a8d903cd6c367",
+      "p_dropback": 0.54,
+      "usage": {
+        "input_tokens": 524,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.24194591701962054
+    },
+    {
+      "game_id": "2024_11_HOU_DAL",
+      "play_id": "817",
+      "true_label": 1,
+      "variant": "numeric",
+      "reverse": true,
+      "cache_key": "78edb702b5255f21d6cb4ba474d11ddf46bca5cb0ab681388c95f79eb18a6fcb",
+      "p_dropback": 0.88,
+      "usage": {
+        "input_tokens": 524,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.14614687487483025
+    },
+    {
+      "game_id": "2024_11_HOU_DAL",
+      "play_id": "3486",
+      "true_label": 0,
+      "variant": "numeric",
+      "reverse": true,
+      "cache_key": "14b996b4a450d7ac016837f50144d58d6dd280a3fe20518944e50ae0750c40f4",
+      "p_dropback": 0.87,
+      "usage": {
+        "input_tokens": 526,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.15093895816244185
+    },
+    {
+      "game_id": "2024_12_DET_IND",
+      "play_id": "838",
+      "true_label": 1,
+      "variant": "numeric",
+      "reverse": true,
+      "cache_key": "68eaf4e29578e33b94aa4a2cbb585a77abb5b1407501438dcd9aade0907a251e",
+      "p_dropback": 0.93,
+      "usage": {
+        "input_tokens": 524,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.12883575004525483
+    },
+    {
+      "game_id": "2024_12_KC_CAR",
+      "play_id": "287",
+      "true_label": 0,
+      "variant": "numeric",
+      "reverse": true,
+      "cache_key": "edaf87b4abaa69f26bc8013a4a226396caabde4455a672bd9e86dc5fbf3c0e14",
+      "p_dropback": 0.8,
+      "usage": {
+        "input_tokens": 525,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.23111008293926716
+    },
+    {
+      "game_id": "2024_13_CHI_DET",
+      "play_id": "2380",
+      "true_label": 0,
+      "variant": "numeric",
+      "reverse": true,
+      "cache_key": "32a08be9ca88810dfa0725d62c9e962135860e7894222295ca6d1ab2560d3354",
+      "p_dropback": 0.82,
+      "usage": {
+        "input_tokens": 525,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.1534799998626113
+    },
+    {
+      "game_id": "2024_14_CHI_SF",
+      "play_id": "2113",
+      "true_label": 0,
+      "variant": "numeric",
+      "reverse": true,
+      "cache_key": "4f29ee24655c06bd24aaf78786225aea93205ad7db2a7c4210d89d22678be7de",
+      "p_dropback": 0.81,
+      "usage": {
+        "input_tokens": 525,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.22599337506107986
+    },
+    {
+      "game_id": "2024_17_TEN_JAX",
+      "play_id": "110",
+      "true_label": 1,
+      "variant": "numeric",
+      "reverse": true,
+      "cache_key": "cba6512b323262d3cd1c577c5a1d2b5edbd8b950fbe2f97a05dde50b0108a54b",
+      "p_dropback": 0.92,
+      "usage": {
+        "input_tokens": 524,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.13270837487652898
+    },
+    {
+      "game_id": "2024_17_TEN_JAX",
+      "play_id": "2708",
+      "true_label": 1,
+      "variant": "numeric",
+      "reverse": true,
+      "cache_key": "89cb1747677dd003184143cf4362b678e953769255149a6f130500ae593f35ee",
+      "p_dropback": 0.93,
+      "usage": {
+        "input_tokens": 525,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.16447316599078476
+    },
+    {
+      "game_id": "2024_18_NYG_PHI",
+      "play_id": "3807",
+      "true_label": 1,
+      "variant": "numeric",
+      "reverse": true,
+      "cache_key": "71768d7f56d7ce61ef455f6426d1b4c428aedcf656150417c8aae9577f1d5a25",
+      "p_dropback": 0.89,
+      "usage": {
+        "input_tokens": 523,
+        "output_tokens": 36
+      },
+      "original_latency_s": 0.22275533294305205
+    }
+  ],
+  "interpretation": "Development pilot only; not final performance evidence.",
+  "variant_summary": {
+    "numeric": {
+      "n": 20,
+      "accuracy": 0.5,
+      "brier": 0.351415,
+      "observed_dropback_rate": 0.5,
+      "predicted_dropback_rate": 1.0,
+      "mean_p_dropback": 0.8465
+    },
+    "verbal": {
+      "n": 20,
+      "accuracy": 0.55,
+      "brier": 0.304845,
+      "observed_dropback_rate": 0.5,
+      "predicted_dropback_rate": 0.95,
+      "mean_p_dropback": 0.8035
+    },
+    "numeric-reversed": {
+      "n": 20,
+      "accuracy": 0.5,
+      "brier": 0.33847499999999997,
+      "observed_dropback_rate": 0.5,
+      "predicted_dropback_rate": 1.0,
+      "mean_p_dropback": 0.8404999999999999
+    }
+  },
+  "sensitivity": {
+    "verbal": {
+      "n_paired": 20,
+      "mean_signed_probability_change": -0.04300000000000002,
+      "mean_absolute_probability_change": 0.09799999999999999,
+      "max_absolute_probability_change": 0.32,
+      "class_changes_at_0_5": 1
+    },
+    "numeric-reversed": {
+      "n_paired": 20,
+      "mean_signed_probability_change": -0.006,
+      "mean_absolute_probability_change": 0.01999999999999999,
+      "max_absolute_probability_change": 0.08999999999999997,
+      "class_changes_at_0_5": 0
+    }
+  },
+  "numeric_threshold_diagnostic": [
+    {
+      "threshold": 0.5,
+      "accuracy": 0.5,
+      "predicted_dropback_rate": 1.0
+    },
+    {
+      "threshold": 0.6,
+      "accuracy": 0.5,
+      "predicted_dropback_rate": 1.0
+    },
+    {
+      "threshold": 0.7,
+      "accuracy": 0.5,
+      "predicted_dropback_rate": 0.9
+    },
+    {
+      "threshold": 0.8,
+      "accuracy": 0.55,
+      "predicted_dropback_rate": 0.85
+    },
+    {
+      "threshold": 0.9,
+      "accuracy": 0.7,
+      "predicted_dropback_rate": 0.3
+    }
+  ],
+  "unique_response_usage_including_cache": {
+    "input_tokens": 30756,
+    "output_tokens": 2161
+  },
+  "mean_original_latency_s": 0.17243558819172905
+}

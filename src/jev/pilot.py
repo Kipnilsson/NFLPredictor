@@ -77,10 +77,13 @@ def diagnostics(rows: list[dict], records: list[dict]) -> dict:
     summaries = {}
     for name, group in groups.items():
         n = len(group)
+        observed_rate = sum(r["true_label"] for r in group) / n
         summaries[name] = {
             "n": n,
             "accuracy": sum((r["p_dropback"] >= .5) == r["true_label"] for r in group) / n,
             "brier": sum((r["p_dropback"] - r["true_label"]) ** 2 for r in group) / n,
+            "observed_dropback_rate": observed_rate,
+            "predicted_dropback_rate": sum(r["p_dropback"] >= .5 for r in group) / n,
             "mean_p_dropback": sum(r["p_dropback"] for r in group) / n,
         }
     baseline = {(r["game_id"], r["play_id"]): r["p_dropback"] for r in groups["numeric"]}
@@ -88,14 +91,27 @@ def diagnostics(rows: list[dict], records: list[dict]) -> dict:
     for name, group in groups.items():
         if name == "numeric":
             continue
-        differences = [r["p_dropback"] - baseline[(r["game_id"], r["play_id"])] for r in group]
-        sensitivity[name] = {"n_paired": len(group),
-                             "mean_absolute_probability_change": sum(map(abs, differences)) / len(group),
-                             "max_absolute_probability_change": max(map(abs, differences))}
+        pairs = [(baseline[(r["game_id"], r["play_id"])], r["p_dropback"]) for r in group]
+        differences = [alternate - original for original, alternate in pairs]
+        sensitivity[name] = {
+            "n_paired": len(group),
+            "mean_signed_probability_change": sum(differences) / len(group),
+            "mean_absolute_probability_change": sum(map(abs, differences)) / len(group),
+            "max_absolute_probability_change": max(map(abs, differences)),
+            "class_changes_at_0_5": sum((base >= .5) != (alt >= .5) for base, alt in pairs),
+        }
+    numeric = groups["numeric"]
+    thresholds = [
+        {"threshold": threshold,
+         "accuracy": sum((r["p_dropback"] >= threshold) == r["true_label"] for r in numeric) / len(numeric),
+         "predicted_dropback_rate": sum(r["p_dropback"] >= threshold for r in numeric) / len(numeric)}
+        for threshold in (.5, .6, .7, .8, .9)
+    ]
     unique_records = {row["cache_key"]: rec for row, rec in zip(rows, records)}
     usage = {token: sum(rec["usage"].get(token, 0) for rec in unique_records.values())
              for token in ("input_tokens", "output_tokens")}
     return {"variant_summary": summaries, "sensitivity": sensitivity,
+            "numeric_threshold_diagnostic": thresholds,
             "unique_response_usage_including_cache": usage,
             "mean_original_latency_s": sum(r["latency_s"] for r in unique_records.values()) / len(unique_records)}
 

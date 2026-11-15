@@ -33,3 +33,12 @@ human reviewed.
 - Verification: 20 offline tests passed; all 8 notebook code cells executed with HTTP
   and API-key access blocked, with two saved figures and no errors. Previewed a
   deterministic 20-play main pilot and five-play/three-variant sensitivity plan.
+
+## 2026-11-15: OpenAI Codex, run by Charlie Martin
+
+- Added season benchmark orchestration around the committed specialist models, common
+  play comparisons, and a prospective 2026 registration workflow.
+- Prepared the 2024 and 2025 datasets and previewed capped JEV cohorts. No season
+  prediction runs or live API requests were made in this session.
+- Extended development pilot sensitivity diagnostics and tested the workflow with
+  synthetic plays, committed specialist models, and mock JEV responses.

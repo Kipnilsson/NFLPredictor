@@ -19,7 +19,10 @@ def save_predictions(df: pl.DataFrame, p: np.ndarray, name: str, split: str, *, 
     output_dir.mkdir(parents=True, exist_ok=True)
     out = df.select(["game_id", "play_id", "season", config.LABEL]).with_columns(
         pl.Series("p_dropback", np.asarray(p, dtype=float)))
-    out.write_parquet(output_dir / f"{name}_{split}.parquet")
+    path = output_dir / f"{name}_{split}.parquet"
+    tmp = path.with_suffix(".tmp")
+    out.write_parquet(tmp)
+    tmp.replace(path)
 
 
 def save_model(model, name: str, meta: dict) -> None:
