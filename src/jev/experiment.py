@@ -9,10 +9,14 @@ from src.jev import client
 
 
 def plan(jobs: list[dict], model_id: str) -> dict:
-    unique = {client.cache_key(model_id, j["prompt"], j["labels"]): j for j in jobs}
-    hits = sum(client.cached(model_id, j["prompt"], j["labels"]) is not None
-               for j in unique.values())
-    return {"rows": len(jobs), "unique_requests": len(unique), "cached_requests": hits,
+    return plan_payloads([client.make_payload(model_id, j["prompt"], j["labels"]) for j in jobs],
+                         model_id)
+
+
+def plan_payloads(payloads: list[dict], model_id: str) -> dict:
+    unique = {client.payload_key(payload): payload for payload in payloads}
+    hits = sum(client.cached_payload(payload) is not None for payload in unique.values())
+    return {"rows": len(payloads), "unique_requests": len(unique), "cached_requests": hits,
             "new_requests": len(unique) - hits, "model_id": model_id}
 
 
@@ -33,8 +37,14 @@ def execution_lock():
 
 def execute(jobs: list[dict], model_id: str, *, live: bool = False,
             max_requests: int = 0) -> tuple[list[dict], dict]:
+    payloads = [client.make_payload(model_id, j["prompt"], j["labels"]) for j in jobs]
+    return execute_payloads(payloads, model_id, live=live, max_requests=max_requests)
+
+
+def execute_payloads(payloads: list[dict], model_id: str, *, live: bool = False,
+                     max_requests: int = 0) -> tuple[list[dict], dict]:
     with execution_lock():
-        summary = plan(jobs, model_id)
+        summary = plan_payloads(payloads, model_id)
         if live and max_requests <= 0:
             raise ValueError("--live requires a positive --max-requests.")
         if summary["new_requests"] and not live:
@@ -44,6 +54,6 @@ def execute(jobs: list[dict], model_id: str, *, live: bool = False,
                              f"{max_requests}. No API calls made; reduce the sample.")
         backend = (client.HTTPBackend(allow_paid=True, max_requests=max_requests)
                    if live and summary["new_requests"] else None)
-        records = [client.query(backend, model_id, j["prompt"], j["labels"]) for j in jobs]
+        records = [client.query_payload(backend, payload) for payload in payloads]
         summary["requests_sent"] = backend.calls if backend else 0
         return records, summary

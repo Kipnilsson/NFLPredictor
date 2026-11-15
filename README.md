@@ -217,3 +217,12 @@ at 0.5, predicted versus observed dropback rates, and a descriptive threshold
 sweep. The headline comparison retains the prespecified 0.5 threshold. Use
 the season benchmark's reliability plot and situational breakdown to check
 calibration and performance by football situation on a larger sample.
+
+### Retrospective 2026 benchmark
+
+Use `--season-to-date` with each 2026 benchmark command to evaluate completed
+regular-season games played before the Eastern date of the prompt freeze. The
+prepare step restricts the nflverse snapshot to completed games in the schedule
+and records play-by-play coverage. Reports and predictions live under
+`results/benchmarks/2026_to_date/`. This snapshot is independent of the prospective
+2026 workflow.

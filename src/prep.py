@@ -74,8 +74,10 @@ def sanity_checks(df: pl.DataFrame, season: int) -> None:
     assert (df["season"] == season).all()
 
 
-def prepare_season(season: int, refresh: bool = False):
+def prepare_season(season: int, refresh: bool = False, *, output_path=None, game_ids=None):
     raw = load_raw(season, refresh)
+    if game_ids is not None:
+        raw = raw.filter(pl.col("game_id").is_in(game_ids))
     df, counts = filter_season(raw)
     sanity_checks(df, season)
     if df.is_empty():
@@ -86,8 +88,8 @@ def prepare_season(season: int, refresh: bool = False):
     counts["dropbacks"] = int(df[config.LABEL].sum())
     counts["runs"] = df.height - counts["dropbacks"]
     out = df.select(config.BOOKKEEPING + config.FEATURES).sort(["game_id", "play_id"])
-    config.PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
-    path = config.PROCESSED_DIR / f"plays_{season}.parquet"
+    path = output_path or config.PROCESSED_DIR / f"plays_{season}.parquet"
+    path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(".tmp")
     out.write_parquet(tmp)
     tmp.replace(path)

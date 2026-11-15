@@ -1,0 +1,162 @@
+{
+  "season": 2024,
+  "role": "exploratory development",
+  "game_ids": [
+    "2024_02_NYJ_TEN",
+    "2024_04_LA_CHI",
+    "2024_06_CIN_NYG",
+    "2024_07_TEN_BUF",
+    "2024_09_IND_MIN",
+    "2024_09_NE_TEN",
+    "2024_12_SF_GB",
+    "2024_13_HOU_JAX",
+    "2024_14_ATL_MIN",
+    "2024_16_CLE_CIN"
+  ],
+  "model_id": "jev-1.13.0",
+  "selected_by_brier": "clear_labels",
+  "variants": {
+    "numeric": {
+      "type": "choice",
+      "instructions": "Predict the observed category of the next NFL offensive snap from the supplied pre-snap situation. The snap is known to be an eligible run or pass, excluding kneels, spikes, two-point attempts, aborted and deleted plays. Predict what the offense will do, rather than which play would be optimal. Only the provided situation is available; no team tendencies or play outcomes are given.",
+      "criteria": {
+        "dropback": "A quarterback dropback, including pass attempts, sacks and QB scrambles.",
+        "designed_run": "An eligible run with no quarterback dropback; the designed-run proxy."
+      }
+    },
+    "frequency": {
+      "type": "choice",
+      "instructions": "Predict the observed category of the next NFL offensive snap from the supplied pre-snap situation. The snap is known to be an eligible run or pass, excluding kneels, spikes, two-point attempts, aborted and deleted plays. Predict what the offense will do, rather than which play would be optimal. Only the provided situation is available; no team tendencies or play outcomes are given. Imagine 100 eligible NFL snaps with these same pre-snap facts. Estimate how many would be dropbacks and how many would be runs. Set the two Choice probabilities to those expected frequencies divided by 100. Use probabilities near 0.5 when the two outcomes are similarly likely.",
+      "criteria": {
+        "dropback": "A quarterback dropback, including pass attempts, sacks and QB scrambles.",
+        "designed_run": "An eligible run with no quarterback dropback; the designed-run proxy."
+      }
+    },
+    "clear_labels": {
+      "type": "choice",
+      "instructions": "Predict the observed category of the next NFL offensive snap from the supplied pre-snap situation. The snap is known to be an eligible run or pass, excluding kneels, spikes, two-point attempts, aborted and deleted plays. Predict what the offense will do, rather than which play would be optimal. Only the provided situation is available; no team tendencies or play outcomes are given.",
+      "criteria": {
+        "dropback": "The quarterback attempts a pass, is sacked on a pass play, or scrambles after dropping back to pass.",
+        "designed_run": "A runner takes a handoff or pitch, or the quarterback carries the ball on a designed run. Exclude scrambles after a dropback."
+      }
+    }
+  },
+  "comparison": [
+    {
+      "prompt": "numeric",
+      "n": 1193,
+      "accuracy": 0.6211232187761945,
+      "balanced_accuracy": 0.5166976840363937,
+      "brier": 0.2879514668901928,
+      "recall_run": 0.043010752688172046,
+      "recall_dropback": 0.9903846153846154,
+      "auroc": 0.6304546260191422,
+      "mean_p_dropback": 0.8571584241408214,
+      "predicted_dropback_rate": 0.9773679798826488
+    },
+    {
+      "prompt": "frequency",
+      "n": 1193,
+      "accuracy": 0.6211232187761945,
+      "balanced_accuracy": 0.5155323171452204,
+      "brier": 0.3078799664710813,
+      "recall_run": 0.03655913978494624,
+      "recall_dropback": 0.9945054945054945,
+      "auroc": 0.6191569183504668,
+      "mean_p_dropback": 0.8949036043587594,
+      "predicted_dropback_rate": 0.9823973176865046
+    },
+    {
+      "prompt": "clear_labels",
+      "n": 1193,
+      "accuracy": 0.6236378876781223,
+      "balanced_accuracy": 0.5207004017487888,
+      "brier": 0.2828134953897737,
+      "recall_run": 0.053763440860215055,
+      "recall_dropback": 0.9876373626373627,
+      "auroc": 0.6477682263972586,
+      "mean_p_dropback": 0.8489438390611902,
+      "predicted_dropback_rate": 0.9715004191114837
+    }
+  ],
+  "paired_vs_numeric": {
+    "frequency": {
+      "n_plays": 1193,
+      "n_games": 10,
+      "B": 2000,
+      "accuracy": {
+        "a": 0.6211232187761945,
+        "b": 0.6211232187761945,
+        "diff": 0.0,
+        "ci95": [
+          -0.002514721642466916,
+          0.0024610841479529547
+        ],
+        "p_a_not_better": 0.653
+      },
+      "brier": {
+        "a": 0.3078799664710811,
+        "b": 0.2879514668901927,
+        "diff": 0.019928499580888437,
+        "ci95": [
+          0.016861867371847028,
+          0.022938606025146226
+        ],
+        "p_a_not_better": 1.0
+      },
+      "balanced_accuracy": {
+        "a": 0.5155323171452204,
+        "b": 0.5166976840363937,
+        "diff": -0.0011653668911733028,
+        "ci95": [
+          -0.004206931218939355,
+          0.0014025578892291695
+        ],
+        "p_a_not_better": 0.8025
+      }
+    },
+    "clear_labels": {
+      "n_plays": 1193,
+      "n_games": 10,
+      "B": 2000,
+      "accuracy": {
+        "a": 0.6236378876781223,
+        "b": 0.6211232187761945,
+        "diff": 0.0025146689019278634,
+        "ci95": [
+          -0.0016353229762877675,
+          0.00690250215703192
+        ],
+        "p_a_not_better": 0.1545
+      },
+      "brier": {
+        "a": 0.28281349538977363,
+        "b": 0.2879514668901927,
+        "diff": -0.0051379715004190585,
+        "ci95": [
+          -0.006991021046037708,
+          -0.003664433393892071
+        ],
+        "p_a_not_better": 0.0
+      },
+      "balanced_accuracy": {
+        "a": 0.5207004017487888,
+        "b": 0.5166976840363937,
+        "diff": 0.004002717712395132,
+        "ci95": [
+          -0.0006940162311317638,
+          0.009499887752700385
+        ],
+        "p_a_not_better": 0.062
+      }
+    }
+  },
+  "requests": {
+    "rows": 2386,
+    "unique_requests": 2376,
+    "cached_requests": 0,
+    "new_requests": 2376,
+    "model_id": "jev-1.13.0",
+    "requests_sent": 2376
+  }
+}

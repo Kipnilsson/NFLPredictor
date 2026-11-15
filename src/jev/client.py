@@ -45,8 +45,11 @@ def make_payload(model_id: str, prompt: str, labels: list[str]) -> dict:
 
 
 def cache_key(model_id: str, prompt: str, labels: list[str]) -> str:
+    return payload_key(make_payload(model_id, prompt, labels))
+
+
+def payload_key(payload: dict) -> str:
     # Do NOT sort keys: the criteria insertion order is an experimental variable.
-    payload = make_payload(model_id, prompt, labels)
     return hashlib.sha256(json.dumps(payload, ensure_ascii=False).encode()).hexdigest()
 
 
@@ -78,14 +81,17 @@ def validate_answer(response: dict, model_id: str) -> dict:
 
 
 def cached(model_id: str, prompt: str, labels: list[str]) -> dict | None:
-    path = cache_path(cache_key(model_id, prompt, labels))
+    return cached_payload(make_payload(model_id, prompt, labels))
+
+
+def cached_payload(payload: dict) -> dict | None:
+    path = cache_path(payload_key(payload))
     if not path.exists():
         return None
     record = json.loads(path.read_text())
-    if (record.get("request") != make_payload(model_id, prompt, labels) or
-            list(record["request"]["questions"]["next_play"]["criteria"]) != labels):
+    if payload_key(record.get("request")) != payload_key(payload):
         raise ValueError("Cached request does not match the requested payload.")
-    answer = validate_answer(record["response"], model_id)
+    answer = validate_answer(record["response"], payload["model"])
     if (record["p_dropback"] != answer["probabilities"][template.DROPBACK] or
             record["p_run"] != answer["probabilities"][template.RUN]):
         raise ValueError("Cached dropback probability disagrees with raw response.")
@@ -138,23 +144,26 @@ class HTTPBackend:
 
 def query(backend: HTTPBackend | None, model_id: str, prompt: str, labels: list[str]) -> dict:
     """Validate and replay cache; cache misses cannot call the API without a backend."""
-    hit = cached(model_id, prompt, labels)
+    return query_payload(backend, make_payload(model_id, prompt, labels))
+
+
+def query_payload(backend: HTTPBackend | None, payload: dict) -> dict:
+    hit = cached_payload(payload)
     if hit is not None:
         return hit
     if backend is None:
         raise RuntimeError("Cache miss; live inference is disabled.")
-    payload = make_payload(model_id, prompt, labels)
     t0 = time.perf_counter()
     response = backend.choose(payload)
     latency = time.perf_counter() - t0
-    answer = validate_answer(response, model_id)
+    answer = validate_answer(response, payload["model"])
     record = {"request": payload, "response": response,
               "template_version": template.TEMPLATE_VERSION,
               "p_dropback": float(answer["probabilities"][template.DROPBACK]),
               "p_run": float(answer["probabilities"][template.RUN]),
               "usage": response.get("usage", {}), "latency_s": latency,
               "timestamp": datetime.now(timezone.utc).isoformat()}
-    path = cache_path(cache_key(model_id, prompt, labels))
+    path = cache_path(payload_key(payload))
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(".tmp")
     tmp.write_text(json.dumps(record, indent=2, allow_nan=False))

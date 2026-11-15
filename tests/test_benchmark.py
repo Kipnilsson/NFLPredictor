@@ -72,3 +72,20 @@ class BenchmarkTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "Play-by-play has not arrived"):
                 benchmark.prospective_plays(data.filter(pl.col("game_id") != "inside"),
                                             protocol, today)
+
+    def test_season_to_date_schedule_uses_eastern_freeze_date(self):
+        from src.jev import freeze
+
+        schedule = pl.DataFrame({
+            "game_id": ["eligible", "freeze_day", "future", "preseason", "unfinished"],
+            "game_type": ["REG", "REG", "REG", "PRE", "REG"],
+            "gameday": ["2026-11-14", "2026-11-15", "2026-11-16", "2026-08-10", "2026-11-14"],
+            "result": [2, 0, None, 5, None],
+            "week": [10, 10, 10, 1, 10],
+        })
+        # 01:00 UTC on Nov 16 is still Nov 15 in New York.
+        with patch.object(freeze, "require_frozen"), \
+                patch.object(benchmark, "read_json", return_value={"timestamp": "2026-11-16T01:00:00+00:00"}), \
+                patch("nflreadpy.load_schedules", return_value=schedule):
+            eligible = benchmark.season_to_date_schedule("jev-1.13.0")
+        self.assertEqual(eligible["game_id"].to_list(), ["eligible"])

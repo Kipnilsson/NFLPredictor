@@ -79,6 +79,21 @@ def prospective_plays(df, protocol, today):
     return cohort
 
 
+def season_to_date_schedule(model_id):
+    import nflreadpy as nfl
+
+    freeze.require_frozen(model_id)
+    freeze_day = datetime.fromisoformat(read_json(freeze.FREEZE_PATH)["timestamp"]).astimezone(ET).date()
+    schedule = nfl.load_schedules([2026])
+    if schedule.schema["gameday"] == pl.String:
+        schedule = schedule.with_columns(pl.col("gameday").str.to_date())
+    return schedule.filter(
+        (pl.col("game_type") == "REG") & pl.col("result").is_not_null()
+        & (pl.col("gameday") < freeze_day)
+    ).select("game_id", "gameday", "week")
+
+
+
 def make_jobs(df):
     labels = template.labels()
     return [{"prompt": template.render(row), "labels": labels}
@@ -101,8 +116,9 @@ def save_report(df, cohort, year, directory, manifest, include_jev):
     if joined.drop_nulls(names)[config.LABEL].n_unique() < 2:
         raise ValueError("The comparison needs observed dropbacks and runs.")
     metadata = {"season": int(year),
-                "evaluation_role": {"2024": "development", "2025": "holdout",
-                                    "2026": "prospective"}[year],
+                "evaluation_role": manifest.get("evaluation_role",
+                                                {"2024": "development", "2025": "holdout",
+                                                 "2026": "prospective"}[year]),
                 "season_eligible_plays": df.height,
                 "season_dropbacks": int(df[config.LABEL].sum()),
                 "season_runs": df.height - int(df[config.LABEL].sum()),
@@ -136,6 +152,8 @@ def main(argv=None):
     size.add_argument("--games", type=int)
     size.add_argument("--all-games", action="store_true")
     ap.add_argument("--refresh", action="store_true")
+    ap.add_argument("--season-to-date", action="store_true",
+                    help="2026 retrospective benchmark on completed pre-freeze games")
     ap.add_argument("--max-requests", type=int)
     args = ap.parse_args(argv)
     if args.live and (args.max_requests is None or args.max_requests <= 0):
@@ -148,13 +166,17 @@ def main(argv=None):
         ap.error("--games must be positive")
     if (args.games is not None or args.all_games) and not (args.preview or args.lock):
         ap.error("Choose the game count during preview or lock")
+    if args.season_to_date and (args.season != 2026 or args.register_prospective):
+        ap.error("--season-to-date is for retrospective 2026 benchmarking")
     if args.season != 2026 and args.register_prospective:
         ap.error("Prospective registration is for 2026")
     if args.season != 2024 and not config.final_eval_enabled():
         ap.error(f"Set {config.FINAL_EVAL_ENV}=1 for held-out seasons")
 
     year = str(args.season)
-    directory = config.RESULTS_DIR / "benchmarks" / year
+    directory = config.RESULTS_DIR / "benchmarks" / ("2026_to_date" if args.season_to_date else year)
+    data_name = "plays_2026_to_date.parquet" if args.season_to_date else f"plays_{year}.parquet"
+    data_path = config.PROCESSED_DIR / data_name
     manifest_path = directory / "cohort.json"
     protocol_path = directory / "prospective.json"
     today = datetime.now(ET).date()
@@ -162,19 +184,29 @@ def main(argv=None):
     if args.register_prospective:
         register_prospective(protocol_path, args.register_prospective, model_id, today)
         return
-    protocol = read_json(protocol_path) if args.season == 2026 else None
+    protocol = read_json(protocol_path) if args.season == 2026 and not args.season_to_date else None
     if protocol and today <= date.fromisoformat(protocol["through"]):
         raise ValueError("Wait until the registered 2026 window closes.")
     if args.prepare:
         if manifest_path.exists():
             raise ValueError("This season already has a locked cohort and data snapshot.")
-        counts = prepare_season(args.season, args.refresh)
+        if args.season_to_date:
+            schedule = season_to_date_schedule(model_id)
+            counts = prepare_season(2026, args.refresh, output_path=data_path,
+                                    game_ids=schedule["game_id"].to_list())
+            ids = pl.read_parquet(data_path, columns=["game_id"])["game_id"].unique()
+            covered = schedule.filter(pl.col("game_id").is_in(ids.to_list()))
+            counts.update({"first_game_date": covered["gameday"].min().isoformat(),
+                           "last_game_date": covered["gameday"].max().isoformat(),
+                           "latest_week_with_data": int(covered["week"].max()),
+                           "completed_games_without_play_data": schedule.height - covered.height})
+        else:
+            counts = prepare_season(args.season, args.refresh)
         write_json(directory / "data_counts.json", counts)
         print(f"Prepared {year}: {counts['eligible']:,} eligible plays.")
         return
 
-    data_path = config.PROCESSED_DIR / f"plays_{year}.parquet"
-    df = load_seasons([args.season]).sort(KEYS)
+    df = (pl.read_parquet(data_path) if args.season_to_date else load_seasons([args.season])).sort(KEYS)
     hashes = model_hashes()
     prompt_hash = freeze.fingerprint(model_id)
     if protocol:
@@ -204,6 +236,8 @@ def main(argv=None):
             raise ValueError("Choose --games N or --all-games explicitly.")
         manifest = {"season": args.season, "seed": config.SEED, **signature,
                     "eligible_game_ids": ids, "game_ids": choose_games(ids, count)}
+        if args.season_to_date:
+            manifest["evaluation_role"] = "retrospective_season_to_date"
 
     cohort = df.filter(pl.col("game_id").is_in(manifest["game_ids"]))
     if cohort.is_empty():

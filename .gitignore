@@ -23,3 +23,5 @@ __pycache__/
 .vscode/
 # Season benchmark per-play predictions
 results/benchmarks/*/predictions/
+
+results/jev/prompt_study_2024/predictions/

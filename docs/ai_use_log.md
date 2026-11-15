@@ -42,3 +42,6 @@ human reviewed.
   prediction runs or live API requests were made in this session.
 - Extended development pilot sensitivity diagnostics and tested the workflow with
   synthetic plays, committed specialist models, and mock JEV responses.
+
+- Added and ran a retrospective 2026 benchmark, using available completed games
+  before the prompt freeze and the original frozen JEV prompt and specialist models.

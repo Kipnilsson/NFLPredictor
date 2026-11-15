@@ -1,0 +1,20 @@
+{
+  "raw_rows": 24002,
+  "after_reg_season": 24002,
+  "after_run_pass": 16864,
+  "dropped_qb_kneel": 0,
+  "dropped_qb_spike": 0,
+  "dropped_two_point_attempt": 66,
+  "dropped_aborted_play": 40,
+  "dropped_play_deleted": 0,
+  "dropped_missing_feature": 0,
+  "dropped_missing_label": 0,
+  "eligible": 16758,
+  "games": 137,
+  "dropbacks": 10125,
+  "runs": 6633,
+  "first_game_date": "2026-09-09",
+  "last_game_date": "2026-11-12",
+  "latest_week_with_data": 10,
+  "completed_games_without_play_data": 0
+}
